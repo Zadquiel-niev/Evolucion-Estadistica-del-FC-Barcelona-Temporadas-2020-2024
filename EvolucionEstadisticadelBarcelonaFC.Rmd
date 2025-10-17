@@ -1,0 +1,85 @@
+---
+title: "ANÁLSIS ESTADÍSTICO DEL FC BARCELONA EN LAS TEMPORADAS 2020-2024"
+author: "Jose Aguirre y Zadquiel Nieves"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+# Planteamiento de Problema
+
+El FC Barcelona es una de las instituciones deportivas más importantes del mundo. Su rendimiento en La Liga depende de muchos factores, desde el 2020 hasta 2024, el equipo ha cambiado mucho, se ha pasado de buscar entender qué pasa, a ver qué funciona mejor. 
+
+# Justificación del Problema
+
+El fútbol actual depende cada vez más del análisis de datos, para un club como el Barcelona, con altas expectativas y un estilo de juego definido, usar estadísticas básicas es muy importante para:
+
+- Detectar fortalezas y debilidades en diferentes situaciones, como partidos en casa o fuera.
+
+- Mejorar la alineación, las estrategias según los rivales y las circunstancias.
+
+- Medir cómo influyen los jugadores importantes en la creación de juego y en marcar goles, también defender bien.
+
+- De cambio Entender el rendimiento en un momento tras la era Messi y en medio de problemas económicos.
+
+- Este análisis ayudará a entender cómo ha evolucionado el equipo más allá de las opiniones personales, usando datos reales de La Liga.
+
+# Objetivo General
+
+Evaluar la evolución táctica y de rendimiento ofensivo del Fútbol Club Barcelona durante las temporadas 2020 a 2024, mediante el análisis estadístico y la visualización de métricas avanzadas como la Posesión (poss), Goles Esperados (xg), Goles esperados en contra (xga), Goles (gf), Goles en contra (ga), Resultado de los partidos en casa y afuera más Formaciones Tácticas. Y ver si esto ayudó al FC Barcelona a levantarse en una de sus peores temporadas en la historia (2020-2021)
+
+## Objetivos Específicos
+- Cuantificar la tendencia anual de las métricas clave de rendimiento (Goles a Favor, Goles en Contra, y Porcentaje de Posesión) para determinar la dirección de la evolución del modelo de juego del equipo.
+- Establecer la relación de correlación (fuerza y dirección) entre el Porcentaje de Posesión y la Eficiencia de Oportunidades (poss, xg, xga) a nivel de partido, viendo los resultados por temporada.
+- Determinar si existe una diferencia estadísticamente significativa en el Puntos por temporadas obtenidos por el club en función de las Formaciones Tácticas (formation) más utilizadas en cada temporada.
+
+# Breve Historia
+
+El FC Barcelona cambió mucho entre 2020 y 2024, después de que Messi se fue en 2021, el club pasó por estos cambios:
+
+- Cambio en el entrenador: De Ronald Koeman a Xavi Hernández, si hubo cambios a nivel de juego.
+
+- Promoción de jóvenes: Llegaron Pedri, Gavi, Lamine Yamal y fichajes como Lewandowski, Raphinha y Koundé entre otros.
+
+- Cambio en la estrategia: Dejaron de usar solo el 3-5-2 y probaron formaciones más variadas como el 4-2-3-1 y el 4-3-3 con doble pivote.
+
+- Resultados: Ganaron mucho en La Liga, pero tuvieron problemas en la Champions League en algunos momentos (todavía).
+
+Este período explica los datos que vemos, Se trata de cambios y adaptaciones constantes.
+
+# Marco Metodológico
+
+## Fuente de Datos y Tiempo
+
+Usamos el conjunto de datos completo matches_full_la_liga.csv. Este conjunto tiene registros de partidos de La Liga desde 2020-2021 hasta 2024-2025. Tiene 4,319 filas. Es una base de datos que muestra la competencia del fútbol español en ese periodo. Las variables incluyen datos cuantitativos y cualitativos. Algunas variables importantes son:
+
+- Resultados: gf (goles a favor), ga (goles en contra), result (resultado)
+- Rendimiento: poss (posesión), sh (tiros), sot (tiros a puerta), xg (goles esperados),
+ xga (Goles esperado en contra) dist (distancia en total recorrida en el partido)
+- Variables de contexto: formación (formación), attendance (asistencia), venue (localía)
+
+## Variables y Análisis
+
+El estudio tiene cuatro partes principales, cada una ayuda a entender el rendimiento del equipo:
+Rendimiento en Casa y Fuera: Comparamos el equipo cuando juega en su campo y cuando juega afuera, goles y goles en contra, esto muestra si el equipo actúa diferente según el lugar de juego.
+Posesión y Goles:  Evaluamos la relación entre cuánto controla el balón, las oportunidades y los goles. Esto nos ayuda a entender si la posesión lleva a más goles esperados y si el equipo es eficiente en ataque.
+Formaciones y Tácticas: Analizamos cómo cambia la estrategia del equipo, revisión de formaciones y rotaciones del plantel en cada temporada, esto revela cómo evoluciona el estilo de juego.
+
+# Infraestructura y Herramientas
+
+Usamos tecnología para analizar los datos. Combinamos estadísticas con visualizaciones:
+
+R, Rmarkdown: Aquí es donde hicimos nuestro PDF, respondiendo las preguntas en el planteamiento delo problema y nuestras Investigaciones del trabajo sobre la Evolución del Barcelona 2020-2024.
+Python, Pandas/Plotly/Matplotlib: Desarrollamos una aplicación web (Streamlit) para ver los datos, la interfaz permite filtrar la información y ver patrones dinámicamente, y lo más importante, mostrar nuestros gráficos interactivos sobre nuestro trabajo e investigaciones.
+¡Perfecto! El ajuste es clave para la seriedad del trabajo. Tienes razón al ser más específico con las hipótesis; ellas son la base de tu análisis estadístico.
+Aquí tienes la formalización de la sección metodológica, incluyendo los Objetivos y una propuesta de Hipótesis Específicas que puedes utilizar, todas vinculadas a las variables de tu base de datos (matches_full_LaLiga.csv).
+
+# Proceso de Trabajo
+
+El trabajo tiene dos fases:
+
+- Preparación de datos: Se realizará la filtración de los registros de la base de datos matches_full_LaLiga.csv correspondientes únicamente al club FC Barcelona para el rango de temporadas 2020-2024.
+- Visualización avanzada: Gráficos de dispersión, diagramas de barras y Gráficos de Líneas, Esto ayuda a entender mejor los datos y responder nuestras preguntas planteadas.
+
+Este método garantiza resultados confiables y útiles. Proporciona información clara para nosotros y también quienes toman decisiones en el club, desde técnicos hasta directivos.
+
+
