@@ -1,44 +1,65 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+import utils
 
-# Leer datos
-datos = pd.read_csv("matches_full_LaLiga.csv")
-datos.columns = [c.strip() for c in datos.columns]
+def generar_poss_vs_xg():
+    df = utils.load_and_clean_data()
+    barca = utils.filter_barcelona_data(df)
+    barca = utils.convert_numeric_columns(barca, ['poss', 'xg'])
 
-# Filtrar Barcelona
-barca = datos[datos['team'].str.contains('barcelona', case=False, na=False)]
-barca = barca[barca['season'].between(2020, 2024)]
 
-# Gráfico 
-plt.figure(figsize=(10, 6))
-plt.scatter(barca['poss'], barca['xg'], color='blue', alpha=0.6)
+    fig = utils.px.scatter(
+        barca,
+        x='poss',
+        y='xg',
+        title='Barcelona: Posesión vs xG (2020-2024)',
+        labels={'poss': 'Posesión (%)', 'xg': 'Goles Esperados (xG)'},
+        opacity=0.7
+    )
 
-# Añadir línea de tendencia
-if len(barca) > 1:  # Solo si hay suficientes 
-    z = np.polyfit(barca['poss'], barca['xg'], 1)
-    p = np.poly1d(z)
-    plt.plot(barca['poss'], p(barca['poss']), "r-", linewidth=2,)
-    plt.legend()
 
-plt.xlabel('Posesión (%)')
-plt.ylabel('Goles Esperados (xG)')
-plt.title('Barcelona: Posesión vs xG (2020-2024)')
-plt.grid(True)
-plt.show()
+    if len(barca) > 1:
+        z = utils.np.polyfit(barca['poss'], barca['xg'], 1)
+        p = utils.np.poly1d(z)
+        x_range = [barca['poss'].min(), barca['poss'].max()]
+        y_range = p(x_range)
 
-# Interpretación
-print("\n" + "="*80)
-print("INTERPRETACIÓN:")
-print("="*80)
-print("Bueno, como podemos notar no hay tanta correlación. es decir entre")
-print("más posesión del balón tiene el Barcelona tiene más chance de Gol, o sea,")
-print("tiene más oportunidad de Gol Sí, pero no es una regla. O sea, no es juro")
-print("que entre tenga mas posición del balón, ajuro va a tener más goles. No,")
-print("no va a tener más chance, no es ajuro como podemos observarlo. Es depende")
-print("probablemente depende del partido, depende de los jugadores que estén en")
-print("cancha, depende de muchas cosas, pero hay una correlación. Sí baja, sí,")
-print("pero la hay. Entonces podemos decir que entre más posición tiene el")
-print("Fútbol Club Barcelona el balón, se podría decir que tiene un poquito más")
-print("oportunidades de Gol, no 100% más pero si algo.")
-print("="*80)
+        fig.add_trace(
+            utils.go.Scatter(
+                x=x_range,
+                y=y_range,
+                mode='lines',
+                name='Línea de tendencia',
+                line=dict(color='red', width=3, dash='dash')
+            )
+        )
+
+    fig.update_traces(
+        marker=dict(color=utils.BLUE, size=8, line=dict(width=1, color='darkblue'))
+    )
+
+    fig.update_layout(
+        showlegend=True,
+        xaxis=dict(title='Posesión (%)'),
+        yaxis=dict(title='Goles Esperados (xG)')
+    )
+
+    # Interpretacion
+    interpretacion = """
+    **Interpretación:**
+    Bueno, como podemos notar no hay tanta correlación. Es decir, entre
+    más posesión del balón tiene el Barcelona tiene más chance de Gol, o sea,
+    tiene más oportunidad de Gol Sí, pero no es una regla. O sea, no es juro
+    que entre tenga mas posición del balón, ajuro va a tener más goles. No,
+    no va a tener más chance, no es ajuro como podemos observarlo. Es depende
+    probablemente depende del partido, depende de los jugadores que estén en
+    cancha, depende de muchas cosas, pero hay una correlación. Sí baja, sí,
+    pero la hay. Entonces podemos decir que entre más posición tiene el
+    Fútbol Club Barcelona el balón, se podría decir que tiene un poquito más
+    oportunidades de Gol, no 100% más pero si algo.
+    """
+
+    return fig, interpretacion
+
+if __name__ == "__main__":
+    fig, interpretacion = generar_poss_vs_xg()
+    fig.write_image("grafico3_poss_vs_xg.png")
+    print(interpretacion)

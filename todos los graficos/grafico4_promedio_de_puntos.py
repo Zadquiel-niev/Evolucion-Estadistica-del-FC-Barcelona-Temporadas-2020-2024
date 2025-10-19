@@ -1,37 +1,48 @@
-import pandas as pd
-import matplotlib.pyplot as plt
+import utils
 
-print("Gráfico 4: Puntos promedio por formación")
-df = pd.read_csv("matches_full_LaLiga.csv")
+def generar_puntos_formacion():
+    df = utils.load_and_clean_data()
+    barca = utils.filter_barcelona_data(df)
+    barca = utils.convert_numeric_columns(barca, ['gf', 'ga'])
 
-#Limpiar nombres de columnas
-df.columns = df.columns.str.strip().str.lower()
+    # Calcular puntos
+    barca['puntos'] = barca.apply(lambda x: 3 if x['gf'] > x['ga'] else (1 if x['gf'] == x['ga'] else 0), axis=1)
 
-#Filtrar xd
-barca = df[df["team"].str.contains("barcelona", case=False, na=False)]
-barca.loc[:, "season"] = pd.to_numeric(barca["season"], errors="coerce")
-barca = barca[(barca["season"] >= 2020) & (barca["season"] <= 2024)]
+    # Agrupar por formacion
+    formacion_media = barca.groupby("formation")["puntos"].mean().sort_values(ascending=False).reset_index()
 
-# 4. Calcular puntos (3 victoria, 1 empate, 0 derrota)
-barca["gf"] = pd.to_numeric(barca["gf"], errors="coerce")
-barca["ga"] = pd.to_numeric(barca["ga"], errors="coerce")
-barca["puntos"] = barca.apply(lambda x: 3 if x["gf"] > x["ga"] else (1 if x["gf"] == x["ga"] else 0), axis=1)
-formacion_media = barca.groupby("formation")["puntos"].mean().sort_values(ascending=False)
+    # Crear grafico de barras interactivo
+    fig = utils.px.bar(
+        formacion_media,
+        x='formation',
+        y='puntos',
+        title="FC Barcelona - Promedio de puntos por formación (2020-2024)",
+        labels={'formation': 'Formación', 'puntos': 'Puntos promedio'},
+        color='puntos',
+        color_continuous_scale=[utils.MAROON, utils.BLUE]
+    )
 
-#Gráfico
-plt.figure(figsize=(8,5))
-formacion_media.plot(kind="bar", color="#004D98", edgecolor="#A50044")
-plt.title("FC Barcelona - Promedio de puntos por formación (2020-2024)")
-plt.ylabel("Puntos promedio")
-plt.xlabel("Formación")
-plt.grid(axis="y", linestyle="--", alpha=0.6)
-plt.tight_layout()
-plt.show()
+    fig.update_layout(
+        xaxis_tickangle=-45,
+        showlegend=False,
+        yaxis=dict(range=[0, 3])
+    )
 
-#Interpretación
-mejor = formacion_media.idxmax()
-peor = formacion_media.idxmin()
-print(f"\nInterpretación:")
-print(f"La formación que más puntos logró fue '{mejor}' con un promedio de {formacion_media.max():.2f} puntos por partido.")
-print(f"La formación menos efectiva fue '{peor}' con un promedio de {formacion_media.min():.2f} puntos por partido.")
-print("Esto sugiere que la táctica influye en el rendimiento, aunque también dependen del rival, localía y estado del equipo.")
+    # Encontrar la mejor y peor formacion
+    mejor = formacion_media.iloc[0]
+    peor = formacion_media.iloc[-1]
+
+    interpretacion = f"""
+    **Interpretación:**
+    La formación que más puntos logró fue **'{mejor['formation']}'** con un promedio de **{mejor['puntos']:.2f} puntos** por partido.
+    La formación menos efectiva fue **'{peor['formation']}'** con un promedio de **{peor['puntos']:.2f} puntos** por partido.
+    Esto sugiere que la **táctica influye significativamente en el rendimiento**, aunque también depende del rival,
+    localía y estado del equipo. La formación **4-3-3** tradicional del Barcelona sigue siendo de las más efectivas.
+    """
+
+    return fig, interpretacion
+
+if __name__ == "__main__":
+    fig, interpretacion = generar_puntos_formacion()
+    fig.write_image("grafico4_promedio_de_puntos.png")
+    print(interpretacion)
