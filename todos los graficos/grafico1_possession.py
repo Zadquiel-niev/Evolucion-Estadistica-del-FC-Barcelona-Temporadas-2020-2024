@@ -1,54 +1,51 @@
-import pandas as pd
-import plotly.express as px
-import streamlit as st
-import os
+import utils
 
-#config
-st.set_page_config(page_title="Gráfico 1 — Posesión por temporada", layout="centered")
-st.title(" FC Barcelona — Promedio de posesión por temporada (2020–2024)")
-csv_path = "matches_full_LaLiga.csv"
-if not os.path.exists(csv_path):
-    st.error(f"No se encontró el archivo `{csv_path}` en el directorio del proyecto.")
-    st.stop()
-df = pd.read_csv(csv_path)
+def generar_possession():
+    df = utils.load_and_clean_data()
+    barca = utils.filter_barcelona_data(df)
+    barca = utils.convert_numeric_columns(barca, ['poss', 'season'])
 
-# Limpieza 
-df.columns = [c.strip() for c in df.columns]
-for c in df.select_dtypes(include='object').columns:
-    df[c] = df[c].astype(str).str.strip()
+    # Calculos específicos del gráfico
+    summary = (
+        barca.groupby('season', as_index=False)['poss']
+        .mean()
+        .rename(columns={'poss': 'Posesión promedio (%)'})
+    )
 
-for c in ['poss', 'season']:
-    if c in df.columns:
-        df[c] = pd.to_numeric(df[c], errors='coerce')
+    # Crear figura
+    fig = utils.px.line(
+        summary,
+        x='season',
+        y='Posesión promedio (%)',
+        markers=True,
+        title="Evolución de la posesión promedio (FC Barcelona 2020–2024)",
+        labels={'season': 'Temporada', 'Posesión promedio (%)': 'Posesión promedio (%)'}
+    )
 
-#Filtrando XD
-barca = df[df['team'].str.lower() == 'barcelona']
-barca = barca[barca['season'].isin([2020, 2021, 2022, 2023, 2024])]
+    fig.update_traces(
+        line=dict(color=utils.BLUE, width=3),
+        marker=dict(color=utils.BLUE, size=8)
+    )
 
-#Temporadas Agrupadas
-summary = (
-    barca.groupby('season', as_index=False)['poss']
-    .mean()
-    .rename(columns={'poss': 'Posesión promedio (%)'})
-)
-#Grafico
-fig = px.line(
-    summary,
-    x='season', y='Posesión promedio (%)',
-    markers=True,
-    title="Evolución de la posesión promedio por temporada (FC Barcelona 2020–2024)",
-    labels={'season': 'Temporada (año de inicio)', 'Posesión promedio (%)': 'Posesión promedio (%)'}
-)
-fig.update_traces(line_color="#004d98", marker_color="#004c98")
+    fig.update_layout(
+        xaxis=dict(tickmode='linear', dtick=1),
+        hovermode='x unified'
+    )
 
-st.plotly_chart(fig, use_container_width=True, key="grafico1")
+    # Interpretación
+    interpretacion = """
+    **Interpretación:**
+    Entre las temporadas **2020 y 2024**, el FC Barcelona ha mostrado una **tendencia descendente en la posesión promedio del balón**,
+    pasando de cerca del **66–67%** a alrededor del **64%** por partido.
+    Este descenso refleja una **pérdida parcial del estilo de juego histórico del club**, basado en la **filosofía del *Tiki Taka*** y el control constante del balón.
+    No obstante, a pesar de esta disminución, el equipo **mantiene uno de los promedios de posesión más altos de LaLiga**,
+    lo que evidencia que su identidad táctica aún conserva raíces en el dominio del balón.
+    """
 
-#interpretación
-st.markdown("""
-**Interpretación:**  
-Entre las temporadas **2020 y 2024**, el FC Barcelona ha mostrado una **tendencia descendente en la posesión promedio del balón**, 
-pasando de cerca del **66–67%** a alrededor del **64%** por partido.  
-Este descenso refleja una **pérdida parcial del estilo de juego histórico del club**, basado en la **filosofía del *Tiki Taka*** y el control constante del balón.  
-No obstante, a pesar de esta disminución, el equipo **mantiene uno de los promedios de posesión más altos de LaLiga**, 
-lo que evidencia que su identidad táctica aún conserva raíces en el dominio del balón.
-""")
+    return fig, interpretacion
+
+# Por si acaso
+if __name__ == "__main__":
+    fig, interpretacion = generar_possession()
+    fig.write_image("grafico1_possession.png")
+    print(interpretacion)
