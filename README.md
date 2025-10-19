@@ -26,7 +26,7 @@ Estos resultados reflejan una transición del club hacia un nuevo modelo competi
 
 Puedes explorar los gráficos interactivos y el dashboard completo del análisis en el siguiente enlace:
 
-👉 **[Abrir la aplicación en Streamlit](link del despliegue aqui)**
+👉 **(link del despliegue aqui)**
 
 
 ## 📚 Tecnologías utilizadas
