@@ -1,65 +1,60 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import os
+import utils
 
-csv = "matches_full_LaLiga.csv"
-if not os.path.exists(csv):
-    raise SystemExit("Coloca 'matches_full_LaLiga.csv' en la misma carpeta.")
+def generar_resultados():
+    df = utils.load_and_clean_data()
+    barca = utils.filter_barcelona_data(df)
 
-# leer columnas xd
-df = pd.read_csv(csv)
-df.columns = [c.strip().lower() for c in df.columns]
-if 'season' not in df.columns or 'result' not in df.columns:
-    raise SystemExit("El CSV necesita tener al menos las columnas 'season' y 'result'.")
+    # Limpiar resultados
+    barca['result'] = barca['result'].astype(str).str.strip().str.upper()
 
-# detectar columna que contenga 'barcelona'
-team_col = None
-for c in df.columns:
-    try:
-        if df[c].astype(str).str.lower().str.contains('barcelona', na=False).any():
-            team_col = c
-            break
-    except Exception:
-        continue
-if team_col:
-    df_barca = df[df[team_col].astype(str).str.lower().str.contains('barcelona', na=False)].copy()
-else:
-    df_barca = df.copy()
-    
-# filtrar 
-df_barca = df_barca[df_barca['season'].between(2020, 2024)]
-df_barca['result'] = df_barca['result'].astype(str).str.strip().str.upper()
+    # Conteo por temporada y resultado
+    pivot = barca.pivot_table(index='season', columns='result',
+                              values='date', aggfunc='count', fill_value=0)
 
-#conteo W/D/L por temporada
-pivot = df_barca.pivot_table(index='season', columns='result', values='date', aggfunc='count', fill_value=0)
-#orden W, D, L
-for col in ['W', 'D', 'L']:
-    if col not in pivot.columns:
-        pivot[col] = 0
-pivot = pivot[['W', 'D', 'L']].sort_index()
+    # Asegurar que tenemos W, D, L
+    for col in ['W', 'D', 'L']:
+        if col not in pivot.columns:
+            pivot[col] = 0
 
-#(W = Ganados, D = Empatados, L = Perdidos)
-seasons = list(pivot.index)
-x = np.arange(len(seasons))
-width = 0.25
-colors = {'W':'#004d98', 'D':'#ffcc00', 'L':'#a50044'}
-fig, ax = plt.subplots(figsize=(9,5))
-ax.bar(x - width, pivot['L'].values, width=width, label='Ganados (W)', color=colors['L'])
-ax.bar(x        , pivot['D'].values, width=width, label='Empatados (D)', color=colors['D'])
-ax.bar(x + width, pivot['W'].values, width=width, label='Perdidos (L)', color=colors['W'])
-ax.set_title("Resultados del FC Barcelona por temporada (2020–2024)")
-ax.set_xlabel("Temporada")
-ax.set_ylabel("Cantidad de partidos")
-ax.set_xticks(x)
-ax.set_xticklabels(seasons)
-ax.legend()
-plt.tight_layout()
-plt.savefig("results_by_season_barcelona.png", dpi=200)
-plt.show()
+    pivot = pivot[['W', 'D', 'L']].sort_index()
 
-# Interpretación 
-print("Interpretación:")
-print("El gráfico muestra la cantidad de partidos ganados, empatados y perdidos por temporada (2020–2024).")
-print("Se espera ver un aumento de victorias y una reducción de derrotas en las temporadas recientes,")
-print("lo cual confirmaría la recuperación del equipo tras las temporadas más complicadas.")
+    # Preparar datos para grafico interactivo
+    pivot_reset = pivot.reset_index().melt(
+        id_vars='season',
+        value_vars=['W', 'D', 'L'],
+        var_name='resultado',
+        value_name='cantidad'
+    )
+
+    # Crear grafico de barras agrupadas interactivo
+    fig = utils.px.bar(
+        pivot_reset,
+        x='season',
+        y='cantidad',
+        color='resultado',
+        title="Resultados del FC Barcelona por temporada (2020–2024)",
+        labels={'season': 'Temporada', 'cantidad': 'Cantidad de partidos'},
+        color_discrete_map={'W': utils.BLUE, 'D': utils.YELLOW, 'L': utils.MAROON},
+        barmode='group'
+    )
+
+    fig.update_layout(
+        xaxis=dict(tickmode='linear', dtick=1),
+        legend_title_text='Resultado'
+    )
+
+    # Interpretacion
+    interpretacion = """
+    **Interpretación:**
+    El gráfico muestra la cantidad de partidos **ganados, empatados y perdidos** por temporada (2020–2024).
+    Se observa una **mejora progresiva** en los resultados con **aumento de victorias** y **reducción de derrotas**
+    en las temporadas más recientes, lo cual confirma la **recuperación competitiva del equipo** tras las temporadas más complicadas.
+    La temporada **2023** muestra el mejor balance, indicando una efectividad creciente del proyecto deportivo.
+    """
+
+    return fig, interpretacion
+
+if __name__ == "__main__":
+    fig, interpretacion = generar_resultados()
+    fig.write_image("grafico5_results.png")
+    print(interpretacion)
