@@ -5,8 +5,32 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import sys, os
 
 st.set_page_config(page_title="Evolución FC Barcelona (2020-2024)", layout="wide")
+st.sidebar.markdown("**DEBUG - entorno (temporal)**")
+st.sidebar.text(f"sys.executable: {sys.executable}")
+st.sidebar.text(f"Python: {sys.version.split()[0]}")
+for p in sys.path[:6]:
+    st.sidebar.text(p)
+
+try:
+    st.sidebar.markdown("Archivos en repo root:")
+    st.sidebar.write(sorted(os.listdir(".")))
+except Exception as e:
+    st.sidebar.text(f"Error list dir: {e}")
+
+USE_PLOTLY = False
+try:
+    import plotly.express as px
+    import plotly.graph_objects as go
+    USE_PLOTLY = True
+    st.sidebar.success(f"plotly OK — v{__import__('plotly').__version__}")
+except Exception as e:
+    st.sidebar.error("plotly NO disponible (ver logs).")
+    st.sidebar.exception(e)
+    st.error("Plotly no se pudo importar. Revisa requirements.txt y los logs del deploy. (Detalles en sidebar / logs).")
+    
 st.title("Evolución Estadística — FC Barcelona (2020–2024)")
 st.markdown("Dashboard interactivo — gráficos corregidos y validados (posesión, xG, formaciones, resultados).")
 
