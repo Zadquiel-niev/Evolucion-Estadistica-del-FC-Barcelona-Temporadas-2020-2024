@@ -28,7 +28,7 @@ st.markdown("""
 st.markdown('<div class="main-header">⚽ ANÁLISIS ESTADÍSTICO FC BARCELONA (2020-2024)</div>', unsafe_allow_html=True)
 
 st.markdown("""
-### Autor: Jose Aguirre y Zadquiel Nieves
+### Autores: Jose Aguirre y Zadquiel Nieves
 
 Esta aplicación presenta un análisis completo del rendimiento del FC Barcelona durante las temporadas 2020-2024.
 
@@ -46,7 +46,7 @@ Esta aplicación presenta un análisis completo del rendimiento del FC Barcelona
 
 ### Cómo usar esta aplicación
 
-Utiliza la barra lateral para navegar entre las diferentes secciones del análisis. Cada página contiene un gráfico interactivo y su interpretación.
+Utiliza la barra lateral para navegar entre las diferentes secciones del análisis.
 """)
 
 st.markdown("---")
