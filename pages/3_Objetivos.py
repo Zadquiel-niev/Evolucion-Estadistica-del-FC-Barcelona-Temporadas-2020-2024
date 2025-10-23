@@ -1,11 +1,7 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Objetivos - FC Barcelona",
-    layout="wide"
-)
-
-st.markdown('<div class="section-header">Objetivos del Estudio</div>', unsafe_allow_html=True)
+st.title("Objetivos")
+st.markdown("---")
 
 st.markdown("""
 ### Objetivo General

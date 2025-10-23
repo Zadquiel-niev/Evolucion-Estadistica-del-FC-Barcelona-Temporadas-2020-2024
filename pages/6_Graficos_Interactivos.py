@@ -3,12 +3,9 @@ import utils
 import plotly.express as px
 import scipy.stats as stats
 
-st.set_page_config(
-    page_title="Graficos Interactivos - FC Barcelona",
-    layout="wide"
-)
+st.title("Graficos Interactivos")
+st.markdown("---")
 
-st.markdown('<div class="section-header">Graficos Interactivos</div>', unsafe_allow_html=True)
 
 # Cargar datos
 df = utils.load_and_clean_data()

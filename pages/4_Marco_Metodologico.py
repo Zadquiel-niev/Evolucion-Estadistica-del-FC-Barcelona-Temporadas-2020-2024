@@ -1,11 +1,8 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Marco Metodologico - FC Barcelona",
-    layout="wide"
-)
 
-st.markdown('<div class="section-header">Marco Metodologico</div>', unsafe_allow_html=True)
+st.title("Marco Metodologico - FC Barcelona")
+st.markdown("---")
 
 st.markdown("""
 ### Fuente de Datos

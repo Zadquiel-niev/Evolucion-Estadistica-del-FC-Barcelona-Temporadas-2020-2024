@@ -2,12 +2,9 @@ import streamlit as st
 import utils
 import pandas as pd
 
-st.set_page_config(
-    page_title="Conclusiones - FC Barcelona",
-    layout="wide"
-)
 
-st.markdown('<div class="section-header">Conclusiones</div>', unsafe_allow_html=True)
+st.title("Conclusiones")
+st.markdown("---")
 
 # Cargar datos para metricas finales
 df = utils.load_and_clean_data()

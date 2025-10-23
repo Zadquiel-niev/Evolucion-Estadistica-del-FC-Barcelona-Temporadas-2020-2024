@@ -1,11 +1,8 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Introduccion - FC Barcelona",
-    layout="wide"
-)
+st.title("Introducción")
+st.markdown("---")
 
-st.markdown('<div class="section-header">Introduccion</div>', unsafe_allow_html=True)
 
 st.markdown("""
 ### Contexto del Analisis

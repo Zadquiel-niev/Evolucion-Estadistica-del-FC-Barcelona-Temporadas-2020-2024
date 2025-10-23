@@ -1,11 +1,7 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Planteamiento del Problema - FC Barcelona",
-    layout="wide"
-)
-
-st.markdown('<div class="section-header">Planteamiento del Problema</div>', unsafe_allow_html=True)
+st.title(" Planteamiento del Problema")
+st.markdown("---")
 
 st.markdown("""
 ### Situacion Actual

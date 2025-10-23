@@ -110,7 +110,8 @@ matches_full_la_liga$formation <- gsub("◆", "", matches_full_la_liga$formation
 
 # Filtrado principal - solo partidos del Barcelona 2020-2024
 barca_data <- matches_full_la_liga %>% 
-  filter(team == "Barcelona", season %in% c(2020, 2021, 2022, 2023, 2024))
+  filter(team == "Barcelona", season %in% c(2020, 2021, 2022, 2023, 2024)) %>%
+  filter(!grepl("^200", formation)) # datos problematicos
 
 cat("- Total de partidos cargados:", nrow(matches_full_la_liga), "\n")
 cat("- Partidos del Barcelona analizados:", nrow(barca_data), "\n")
@@ -472,3 +473,11 @@ knitr::kable(conclusiones_mejoradas,
              col.names = c("Objetivo", "Hallazgo Principal", "Valor", "Implicación"),
              align = c("l", "l", "c", "l"))
 ```
+
+
+# Conclusión
+
+El análisis estadístico del FC Barcelona en las temporadas 2020 a 2024 muestra cambios en su estilo de juego. El equipo jugó con una estrategia basada en mantener la posesión del balón. La posesión promedio fue del 64.9%. Sin embargo, tener más posesión no garantizó el éxito. La temporada 2023 fue la más exitosa. El equipo obtuvo 88 puntos y tuvo una efectividad del 77.2%. Esto se debió a una defensa fuerte, que permitió solo 0.53 goles en contra por partido. La ofensiva también fue eficiente. La posesión se mantuvo similar a años anteriores, pero no fue el factor principal para ganar partidos.
+
+
+Se confirmó que la posesión del balón no se relaciona directamente con la efectividad del equipo. La clave está en cómo se usa esa posesión. Las formaciones más frecuentes fueron el 3-4-3 y el 3-2-4-1. Estas formaciones mostraron un equilibrio entre ataque y defensa. Otros sistemas con tres defensas tuvieron resultados diferentes. El equipo jugó bien como local, pero tuvo más dificultades como visitante. Esto indica que se puede mejorar en partidos fuera de casa. En general, el FC Barcelona superó una fase de cambio después de Messi. El equipo tuvo que cambiar tacticamente y mejorar la eficiencia. 

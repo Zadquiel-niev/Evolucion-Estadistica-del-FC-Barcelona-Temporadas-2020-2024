@@ -4,12 +4,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-st.set_page_config(
-    page_title="Analisis por Temporadas - FC Barcelona",
-    layout="wide"
-)
+st.title("Analisis por Temporadas")
+st.markdown("---")
 
-st.markdown('<div class="section-header">Analisis por Temporadas</div>', unsafe_allow_html=True)
 
 # Cargar datos
 df = utils.load_and_clean_data()
