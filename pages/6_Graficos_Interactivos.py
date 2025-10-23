@@ -188,7 +188,7 @@ if 'formation' in barca_data.columns and 'gf' in cols and 'ga' in cols:
     **Análisis:**
     La táctica influye significativamente en el rendimiento del equipo. Las formaciones con mejor promedio de puntos
     suelen ser aquellas que mejor se adaptan al estilo de juego del Barcelona y a las características de los jugadores disponibles.
-    La formación **4-3-3**, tradicional del club, generalmente muestra buenos resultados, pero es importante considerar
+    La formación **3-4-3**, tradicional del club, generalmente muestra buenos resultados, pero es importante considerar
     el contexto de cada partido (rival, localía, estado del equipo).
     """)
 
