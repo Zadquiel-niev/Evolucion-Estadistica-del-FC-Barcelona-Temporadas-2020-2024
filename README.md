@@ -26,7 +26,7 @@ Estos resultados reflejan una transición del club hacia un nuevo modelo competi
 
 Puedes explorar los gráficos interactivos y el dashboard completo del análisis en el siguiente enlace:
 
-👉 **(link del despliegue aqui)**
+👉 **https://evolucion-estadistica-del-fc-barcelona-temporadas-2020-2024-dh.streamlit.app/**
 
 
 ## 📚 Tecnologías utilizadas
